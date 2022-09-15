@@ -16,6 +16,7 @@
           <td><%= post.location %></th>
           <td><%= post.text %></th>
           <td>
+            <%= link_to 'comments', post_comments_path(post), class: 'btn btn-warning' %>
             <%= link_to 'edit', edit_post_path(post), class: 'btn btn-warning' %>
             <%= link_to "delete", post_path(post), method: :delete, data: { confirm: "Are you sure?" }, class: 'btn btn-danger' %>
           </td>
