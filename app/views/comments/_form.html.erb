@@ -1,0 +1,12 @@
+<style>
+    p {
+        font-size: 12px;
+        margin-bottom: 4px
+    }
+</style>
+
+<div class="field">
+  <%= f.label :content %>
+  <%= f.text_field  :content , class: 'form-control' %>
+  <%= content_tag :p, comment.errors.full_messages_for(:content).join(', '), class: 'content-danger m-1' if comment.errors.has_key?(:content) %>
+</div>

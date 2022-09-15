@@ -5,3 +5,7 @@ en:
       edit?: you are not authorized to edit this post
       update?: you are not authorized to edit this post
       destroy?: you are not authorized to delete this post
+    comment_policy:
+      edit?: you are not authorized to edit this comment
+      update?: you are not authorized to edit this comment
+      destroy?: you are not authorized to delete this comment

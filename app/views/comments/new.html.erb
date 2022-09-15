@@ -1,0 +1,15 @@
+<!--Page-->
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <%= link_to "❮ Back", post_comments_path, class: 'btn btn-sm btn-outline-primary d-inline-block '%>
+      <h5 class="d-inline-block align-middle mx-2 my-1">Create Post</h5>
+    </div>
+    <div class="card-body">
+      <%= form_for @comment, url: post_comments_path(@post), method: :comment do |f| %>
+        <%= render partial: 'form', locals: {f: f, comment: @comment} %>
+        <%= f.submit "Create", class: 'border btn btn-primary form-control mt-3' %>
+      <% end %>
+    </div>
+  </div>
+</div>
