@@ -1,0 +1,37 @@
+<style>
+    p {
+        font-size: 12px;
+        margin-bottom: 4px
+    }
+</style>
+
+<div class="text-center">
+  <img src="" alt='avatar' id="previewImg" class="w-25 my-2 m-auto" style="display:none; object-fit: cover;">
+  <%= image_tag post.image.url, alt: 'avatar', class:"original w-25 my-2", style:"object-fit: cover" if post.image?%>
+  <div class="field">
+    <%= f.label :image, "change image", class: "btn btn-dark" %>
+    <%= f.file_field :image, class: 'form-control d-none', onchange: "previewFile(this)" %>
+    <%= content_tag :p, post.errors.full_messages_for(:image).join(', '), class: 'text-danger m-1' if post.errors.has_key?(:image) %>
+  </div>
+</div>
+
+<div class="field">
+  <%= f.label :text %>
+  <%= f.text_field  :text , class: 'form-control' %>
+  <%= content_tag :p, post.errors.full_messages_for(:text).join(', '), class: 'text-danger m-1' if post.errors.has_key?(:text) %>
+</div>
+
+
+<script>
+    function previewFile(input) {
+        var file = $("input[type=file]").get(0).files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                $("#previewImg").attr("src", reader.result);
+                $("#previewImg").css('display', 'block');
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
