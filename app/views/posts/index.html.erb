@@ -1,4 +1,5 @@
 <%= link_to 'New', new_post_path, class: 'btn btn-primary w-25' %>
+<%= button_to "Logout", destroy_user_session_path, :method => :delete %>
 <div class="card mt-4">
   <div class="card-body ">
     <table class="table table-striped table-hover">

@@ -1,6 +1,7 @@
 class PostsController < ApplicationController
     before_action :authenticate_user!, except: :index
     before_action :set_post, except: [:index, :new, :create]
+    after_action :verify_authorized, except: [:index, :new, :create]
 
     def index
       @posts= Post.all
@@ -10,9 +11,12 @@ class PostsController < ApplicationController
       @post = Post.new
     end
 
-    def edit; end
+    def edit
+      authorize @post, :edit?, policy_class: PostPolicy
+    end
 
     def update
+      authorize @post, :update?, policy_class: PostPolicy
       if @post.update(post_params)
         flash[:notice] = "Successfully updated!"
         redirect_to posts_path
@@ -22,6 +26,7 @@ class PostsController < ApplicationController
     end
 
     def destroy
+      authorize @post, :destroy?, policy_class: PostPolicy
       if @post.destroy
         flash[:notice] = "Successfully deleted!"
       else
