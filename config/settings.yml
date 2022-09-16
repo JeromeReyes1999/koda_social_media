@@ -1,0 +1,4 @@
+development:
+  merchant:
+    ip_geolocation:
+      key: a084ea1b534e4f27a17f22c25d527b3b

@@ -5,22 +5,36 @@
     }
 </style>
 
+
+<% if @display_address.present? %>
+  <span class="badge bg-primary"><%= @display_address %></span>
+    <div class="field">
+      <div class="form-check form-switch">
+        <%= check_box_tag :share_geo_location, 'true', @post.location.present?, class:"form-check-input", role:"switch"%>
+        <label class="form-check-label">Share my location</label>
+      </div>
+    </div>
+<% end %>
+
 <div class="text-center">
-  <img src="" alt='avatar' id="previewImg" class="w-25 my-2 m-auto" style="display:none; object-fit: cover;">
-  <%= image_tag post.image.url, alt: 'avatar', class:"original w-25 my-2", style:"object-fit: cover" if post.image?%>
+  <%= image_tag "", id:"previewImg", class:"w-25 my-2 d-none", style:"object-fit: cover"%>
+  <%= image_tag post.image.url, class:"original w-25 my-2", style:"object-fit: cover" if post.image?%>
   <div class="field">
     <%= f.label :image, "change image", class: "btn btn-dark" %>
     <%= f.file_field :image, class: 'form-control d-none', onchange: "previewFile(this)" %>
     <%= content_tag :p, post.errors.full_messages_for(:image).join(', '), class: 'text-danger m-1' if post.errors.has_key?(:image) %>
   </div>
 </div>
-
+<div class="field">
+  <%= f.label :audience %>
+  <%= f.select :audience, Post.audiences.keys.map { |key| [key.humanize, key] }, { :prompt => 'status' }, class: 'form-control  form-control-sm' %>
+  <%= content_tag :p, post.errors.full_messages_for(:audience).join(', '), class: 'text-danger m-1' if post.errors.has_key?(:audience) %>
+</div>
 <div class="field">
   <%= f.label :text %>
   <%= f.text_field  :text , class: 'form-control' %>
   <%= content_tag :p, post.errors.full_messages_for(:text).join(', '), class: 'text-danger m-1' if post.errors.has_key?(:text) %>
 </div>
-
 
 <script>
     function previewFile(input) {
@@ -30,6 +44,7 @@
             reader.onload = function () {
                 $("#previewImg").attr("src", reader.result);
                 $("#previewImg").css('display', 'block');
+                $(".original").css('display', 'none');
             }
             reader.readAsDataURL(file);
         }

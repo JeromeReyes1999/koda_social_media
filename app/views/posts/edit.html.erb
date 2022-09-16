@@ -2,12 +2,12 @@
 <div class="container">
   <div class="card">
     <div class="card-header">
-      <%= link_to "❮ Back", posts_path, class: 'btn btn-sm btn-outline-primary d-inline-block '%>
+      <%= link_to "❮ Back", posts_path, class: 'btn btn-sm btn-outline-primary d-inline-block ' %>
       <h5 class="d-inline-block align-middle mx-2 my-1">Edit Post</h5>
     </div>
     <div class="card-body">
       <%= form_for @post, url: post_path(@post), method: :patch do |f| %>
-        <%= render partial: 'form', locals: {f: f, post: @post} %>
+        <%= render partial: 'form', locals: { f: f, post: @post } %>
         <%= f.submit "Update", class: 'border btn btn-primary form-control mt-3' %>
       <% end %>
     </div>
