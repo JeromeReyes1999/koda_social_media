@@ -1,0 +1,19 @@
+<div class="mb-2">
+  <%= current_user.email %>
+  <% User::REQUEST_STATES.each do |request_state| %>
+    <%= link_to request_state, friend_requests_path(request_state: request_state), class: "#{:active if params[:request_state] == request_state} btn btn-primary" %>
+  <% end %>
+
+  <% @non_associated_users&.each do |non_associated_user| %>
+    <%= non_associated_user.email %>
+    <%= link_to 'Add Friend', friend_requests_path(receiver_id: non_associated_user), method: :post, class: "btn btn-primary"%>
+  <% end %>
+
+  <% @friend_requests&.each do |friend_request| %>
+    <%= friend_request.associated_user(current_user).email %>
+    <%= link_to :accept, friend_request_accept_path(friend_request), method: :put, class: "btn btn-primary" if policy(friend_request).accept?%>
+    <%= link_to :decline, friend_request_decline_path(friend_request), method: :delete, class: "btn btn-primary" if policy(friend_request).decline?%>
+    <%= link_to :unfriend, friend_request_unfriend_path(friend_request), method: :delete, class: "btn btn-primary" if policy(friend_request).unfriend?%>
+    <%= link_to :cancel, friend_request_cancel_path(friend_request), method: :delete, class: "btn btn-primary" if policy(friend_request).cancel?%>
+  <% end %>
+</div>
