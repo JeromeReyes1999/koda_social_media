@@ -1,0 +1,28 @@
+<table>
+  <% ['Manage members', 'Pending approval' ].each do |manage_members| %>
+    <%= link_to manage_members, group_member_management_path(manage_members: manage_members), class: "#{:active if params[:manage_members] == manage_members} btn btn-primary" %>
+  <% end %>
+
+  <% @member_records&.each do |member_record| %>
+    <tr>
+      <td><%= member_record.user.email %></th>
+      <td>
+        <%#= link_to 'Suspend', group_invite_path(@group, friend), method: :post, class: 'btn btn-warning' %>
+        <%#= link_to 'Unsuspend', group_invite_path(@group, friend), method: :post, class: 'btn btn-warning' %>
+        <%= form_for member_record, url: user_group_change_role_path(member_record), method: :put do |f| %>
+          <%= f.select :roles, current_user.subordinates(member_record.group).map { |key| [key.to_s.humanize, key] }, { class: 'form-control mt-3' } %>
+          <%= f.submit "Assign", class: 'text-light btn form-control' %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+
+  <% @pending_member_records&.each do |pending_member| %>
+    <tr>
+      <td><%= pending_member.user.email %></th>
+      <td>
+        <%= link_to 'Approve', user_group_approve_path(pending_member), method: :put, class: 'btn btn-warning'%>
+      </td>
+    </tr>
+  <% end %>
+</table>

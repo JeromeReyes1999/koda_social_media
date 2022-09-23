@@ -4,11 +4,31 @@ Rails.application.routes.draw do
     resources :comments
   end
 
-  resources :friend_requests, only: [:index, :create]  do
+  resources :friend_requests, only: [:index, :create] do
     put :accept, to: 'friend_requests#accept'
     delete :decline, to: 'friend_requests#decline'
     delete :unfriend, to: 'friend_requests#unfriend'
     delete :cancel, to: 'friend_requests#cancel'
+  end
+
+  resources :user_groups, only: :index do
+    put :accept, to: 'user_groups#accept'
+    put :leave, to: 'user_groups#leave'
+    put :approve, to: 'user_groups#approve'
+    put :decline, to: 'user_groups#decline'
+    put :change_role, to: 'user_groups#change_role'
+  end
+
+  resources :groups, except: :index do
+    resources :posts, except: :index,controller: "group_posts" do
+      resources :comments
+    end
+    post :join, to: 'groups#join'
+    get :home
+    post 'invite/:user_id', as: :invite, to: 'groups#invite'
+    get :invite_friends, to: 'groups#invite_friends'
+    get :member_management, to: 'groups#member_management'
+    put 'change_privacy/:privacy', as: :change_privacy, to: 'groups#change_privacy'
   end
 
   root :to => 'posts#index'

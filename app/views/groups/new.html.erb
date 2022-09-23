@@ -1,0 +1,70 @@
+<style>
+    p {
+        font-size: 12px;
+        margin-bottom: 4px
+    }
+</style>
+
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <%= link_to "❮ Back", user_groups_path, class: 'btn btn-sm btn-outline-primary d-inline-block ' %>
+      <h5 class="d-inline-block align-middle mx-2 my-1">Create Group</h5>
+    </div>
+    <div class="card-body">
+      <%= form_for @group, url: groups_path(@group), method: :post do |f| %>
+
+        <div class="text-center">
+          <%= image_tag "", id: "previewImg", class: "w-25 my-2 d-none", style: "object-fit: cover" %>
+          <%= image_tag @group.banner.url, class: "original w-25 my-2", style: "object-fit: cover" if @group.banner? %>
+          <div class="field">
+            <%= f.label :banner, "change banner", class: "btn btn-dark" %>
+            <%= f.file_field :banner, class: 'form-control d-none', onchange: "previewFile(this)" %>
+            <%= content_tag :p, @group.errors.full_messages_for(:banner).join(', '), class: 'text-danger m-1' if @group.errors.has_key?(:banner) %>
+          </div>
+        </div>
+
+        <div class="field">
+          <%= f.label :name %>
+          <%= f.text_field :name, class: 'form-control' %>
+          <%= content_tag :p, @group.errors.full_messages_for(:name).join(', '), class: 'text-danger m-1' if @group.errors.has_key?(:name) %>
+        </div>
+
+        <div class="field">
+          <%= f.label :description %>
+          <%= f.text_field :description, class: 'form-control' %>
+          <%= content_tag :p, @group.errors.full_messages_for(:description).join(', '), class: 'text-danger m-1' if @group.errors.has_key?(:description) %>
+        </div>
+
+        <div class="field">
+          <%= f.label :privacy %>
+          <%= f.select :privacy, Group.privacies.keys.map { |key| [key.humanize, key] }, { :prompt => 'Genre' }, class: 'form-control  form-control-sm' %>
+          <%= content_tag :p, @group.errors.full_messages_for(:privacy).join(', '), class: 'text-danger m-1' if @group.errors.has_key?(:privacy) %>
+        </div>
+
+        <div class="field">
+          <%= f.label :can_invite %>
+          <%= f.check_box :can_invite %>
+          <%= content_tag :p, @group.errors.full_messages_for(:can_invite).join(', '), class: 'text-danger m-1' if @group.errors.has_key?(:can_invite) %>
+        </div>
+
+        <%= f.submit "Create", class: 'border btn btn-primary form-control mt-3' %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+    function previewFile(input) {
+        var file = $("input[type=file]").get(0).files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                $("#previewImg").attr("src", reader.result);
+                $("#previewImg").css('display', 'block');
+                $(".original").css('display', 'none');
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>

@@ -1,0 +1,4 @@
+<%= image_tag @group.banner.url, class:"original w-25 my-2", style:"object-fit: cover"%>
+<%= @group.name %>
+<%= @group.description%>
+<%= link_to 'group home', group_home_path(@group), class: 'btn btn-warning' if policy(@group).home?%>

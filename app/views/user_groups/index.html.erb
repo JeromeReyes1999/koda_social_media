@@ -1,0 +1,22 @@
+<div class="mb-2">
+  <%= current_user.email %>
+  <%= link_to :create_new_group, new_group_path, class: "btn btn-primary"%>
+
+  <% ['Find groups', 'Groups', 'Pending Approval', 'Group invited' ].each do |group_record| %>
+    <%= link_to group_record, user_groups_path(group_record: group_record), class: "#{:active if params[:group_record] == group_record} btn btn-primary" %>
+  <% end %>
+
+  <% @non_associated_groups&.each do |non_associated_group| %>
+    <%= non_associated_group.name %>
+    <%= non_associated_group.description %>
+    <%= link_to 'Join', group_join_path(non_associated_group), method: :post, class: "btn btn-primary"%>
+  <% end %>
+
+  <% @user_groups&.each do |user_group| %>
+    <%= link_to user_group.group.name, group_path(user_group.group), class: "btn btn-primary"%>
+    <%= link_to user_group.group.description, group_path(user_group.group), class: "btn btn-primary" %>
+    <%= link_to :leave, user_group_leave_path(user_group), method: :put, lass: "btn btn-primary" if policy(user_group).leave?%>
+    <%= link_to :accept, user_group_accept_path(user_group), method: :put, class: "btn btn-primary" if policy(user_group).accept?%>
+    <%= link_to :decline, user_group_decline_path(user_group), method: :put, class: "btn btn-primary" if policy(user_group).decline?%>
+  <% end %>
+</div>
