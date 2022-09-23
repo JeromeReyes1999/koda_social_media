@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_15_103351) do
+ActiveRecord::Schema.define(version: 2022_09_19_110150) do
 
   create_table "comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "content"
@@ -22,14 +22,26 @@ ActiveRecord::Schema.define(version: 2022_09_15_103351) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+  create_table "friend_requests", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "receiver_id"
+    t.integer "state"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["receiver_id"], name: "index_friend_requests_on_receiver_id"
+    t.index ["user_id"], name: "index_friend_requests_on_user_id"
+  end
+
   create_table "posts", charset: "utf8mb4", force: :cascade do |t|
     t.integer "audience"
-    t.string "location"
     t.string "text"
     t.string "image"
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "province"
+    t.string "district"
+    t.string "city"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 

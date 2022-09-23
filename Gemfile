@@ -25,6 +25,10 @@ gem 'devise'
 gem 'pundit'
 
 gem 'carrierwave', '~> 2.0'
+
+gem 'rest-client'
+
+gem 'aasm'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
