@@ -8,7 +8,7 @@ class GroupPostsController < PostsController
 
   def publish
     authorize @group, :publish?, policy_class: GroupPostPolicy
-    if @post.may_publish! @post.publish!
+    if @post.may_publish? @post.publish!
       flash[:notice] = 'Successfully accepted'
     else
       flash[:alert] = @post.errors.full_messages.join(', ')
@@ -16,10 +16,11 @@ class GroupPostsController < PostsController
     redirect_to request.referrer || group_home_path(@group)
   end
 
+  def show_remove; end
 
   def remove
     authorize @group, :remove?, policy_class: GroupPostPolicy
-    if @post.may_remove! @post.remove!
+    if @post.may_remove? @post.remove!
       flash[:notice] = 'Successfully accepted'
     else
       flash[:alert] = @post.errors.full_messages.join(', ')
@@ -28,10 +29,6 @@ class GroupPostsController < PostsController
   end
 
   private
-
-  def set_post
-    @post = Post.find(params[:id])
-  end
 
   def set_group
     @group = Group.find(params[:group_id])

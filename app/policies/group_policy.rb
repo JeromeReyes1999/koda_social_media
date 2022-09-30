@@ -4,7 +4,7 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def invite_friends?
-    record.can_invite? && record.member?(user)
+    record.can_invite? && record.member?(user) && !record.user_groups.find_by(user: user).is_suspended
   end
 
   def invite?
@@ -12,7 +12,7 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def member_management?
-    UserGroup::MANAGER_ROLES.map(&:to_s).include?(record.user_groups.find_by(user: user).roles)
+    record.user_groups.where(user: user).where.not(roles: :normal).present?
   end
 
   def destroy?
@@ -27,9 +27,9 @@ class GroupPolicy < ApplicationPolicy
     def resolve
       user_group = user.user_groups.find_by(group: scope)
       if user_group.admin?
-        scope.user_groups.where.not(user: [scope.owner, user])
+        scope.user_groups.where.not(user: [scope.owner, user]).accepted
       elsif user_group.moderator?
-        scope.user_groups.where.not(user: [scope.owner, user]).where.not(roles: :admin)
+        scope.user_groups.where.not(user: [scope.owner, user]).accepted.where.not(roles: :admin)
       end
     end
   end

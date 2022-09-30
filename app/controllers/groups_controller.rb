@@ -9,8 +9,8 @@ class GroupsController < ApplicationController
 
   def member_management
     authorize @group, :member_management?, policy_class: GroupPolicy
-    @pending_member_records = @group.user_groups.includes(:user).pending if params[:manage_members] == 'Pending approval'
-    @member_records = policy_scope(@group).includes(:user) if params[:manage_members] != 'Pending approval'
+    @pending_member_records = @group.user_groups.includes(:user).pending if params[:management] == 'Pending approval'
+    @member_records = policy_scope(@group).includes(:user) if params[:management] != 'Pending approval'
   end
 
   def change_privacy
@@ -66,7 +66,7 @@ class GroupsController < ApplicationController
         flash[:alert] = @user_group.errors.full_messages.join(', ')
       end
     end
-    redirect_to request.referrer || user_groups_path(group_record: 'Find groups')
+    redirect_to user_groups_path(group_record: 'Find groups')
   end
 
   def invite_friends
@@ -92,7 +92,7 @@ class GroupsController < ApplicationController
         flash[:alert] = @user_group.errors.full_messages.join(', ')
       end
     end
-    redirect_to request.referrer || user_groups_path(group_record: 'Find groups')
+    redirect_to group_invite_friends_path
   end
 
   private
@@ -113,6 +113,4 @@ class GroupsController < ApplicationController
   def group_params
     params.require(:group).permit(:name, :banner, :description, :privacy, :can_invite)
   end
-
-
 end

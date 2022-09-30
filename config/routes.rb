@@ -17,6 +17,8 @@ Rails.application.routes.draw do
     put :approve, to: 'user_groups#approve'
     put :decline, to: 'user_groups#decline'
     put :change_role, to: 'user_groups#change_role'
+    put 'change_suspension/:is_suspended', as: :change_suspension, to: 'user_groups#change_suspension'
+    put :remove, to: 'user_groups#remove'
   end
 
   resources :groups, except: :index do

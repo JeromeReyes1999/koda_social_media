@@ -10,13 +10,13 @@ class UserGroup < ApplicationRecord
   ].freeze
 
   PREVIOUS_MEMBER_STATES = [
-    :left, :declined, :removed, :suspended
+    :left, :declined, :removed, :rejected
   ].freeze
 
   include AASM
   aasm column: :state do
     state :pending, initial: true
-    state :accepted, :suspended, :left, :declined, :removed
+    state :accepted, :suspended, :left, :declined, :removed, :rejected
 
     event :accept do
       transitions from: :pending, to: :accepted
@@ -30,14 +30,20 @@ class UserGroup < ApplicationRecord
       transitions from: :pending, to: :declined
     end
 
+    event :reject do
+      transitions from: :pending, to: :rejected
+    end
+
     event :remove do
       transitions from: :accepted, to: :removed
     end
 
     event :reenter do
-      transitions from: [:left, :decline, :removed], to: :pending
+      transitions from: [:left, :decline, :removed, :rejected], to: :pending
     end
   end
+
+
 
   def suspend
     update(is_suspended: true)

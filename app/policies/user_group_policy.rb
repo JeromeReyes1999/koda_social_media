@@ -12,10 +12,32 @@ class UserGroupPolicy < ApplicationPolicy
   end
 
   def approve?
-    UserGroup::MANAGER_ROLES.map(&:to_s).include?(user.user_groups.find_by(group: record.group).roles) && record.may_accept? && !record.invited?
+    user_manager? && record.may_accept? && !record.invited?
+  end
+
+  def remove?
+    user_owner_or_moderator? && record.may_remove?
+  end
+
+  def change_suspension?
+    user_manager?
+  end
+
+  def reject?
+    user_owner_or_moderator? && record.may_reject?
   end
 
   def leave?
-    record.user == user && record.may_leave? && !record.group.owner == user
+    record.user == user && record.may_leave? && record.group.owner != user
+  end
+
+  private
+
+  def user_owner_or_moderator?
+    user.user_groups.find_by(group: record.group).moderator? || record.group.owner == user
+  end
+
+  def user_manager?
+    user.user_groups.where(group: record.group).where.not(roles: :normal).present?
   end
 end
