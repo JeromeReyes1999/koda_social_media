@@ -8,7 +8,7 @@
       <td><%= member_record.user.email %></th>
       <td>
         <%= link_to member_record.is_suspended ? 'unsuspend' : 'suspend', user_group_change_suspension_path(member_record, is_suspended: member_record.is_suspended ? 0 : 1), method: :put, class: 'btn btn-warning' %>
-        <%= link_to 'Remove', user_group_remove_path(member_record), method: :put, class: 'btn btn-warning' if policy(member_record).remove?%>
+        <%= link_to 'Remove', user_group_remove_path(member_record), method: :put, class: 'btn btn-warning'%>
         <%= form_for member_record, url: user_group_change_role_path(member_record), method: :put  do |f| %>
           <%= f.select :roles, current_user.subordinates(member_record.group).map { |key| [key.to_s.humanize, key] }, { class: 'form-control mt-3' } %>
           <%= f.submit "Assign", class: 'text-light btn form-control' %>

@@ -22,14 +22,19 @@ Rails.application.routes.draw do
   end
 
   resources :groups, except: :index do
-    resources :posts, except: :index,controller: "group_posts" do
+    resources :posts, except: :index, controller: "group_posts" do
       resources :comments
+      put :remove, to: 'group_posts#remove'
+      get :show_remove, to: 'group_posts#show_remove'
+      put :reject, to: 'group_posts#reject'
+      put :publish, to: 'group_posts#publish'
     end
     post :join, to: 'groups#join'
     get :home
     post 'invite/:user_id', as: :invite, to: 'groups#invite'
     get :invite_friends, to: 'groups#invite_friends'
     get :member_management, to: 'groups#member_management'
+    get :post_management, to: 'groups#post_management'
     put 'change_privacy/:privacy', as: :change_privacy, to: 'groups#change_privacy'
   end
 

@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
     before_action :authenticate_user!, except: :index
-    before_action :set_post, except: [:index, :new, :create]
+    before_action :set_post, except: [:index, :create, :new]
     before_action :set_geo_location, only: [:new, :create]
     after_action :verify_authorized, except: [:index, :new, :create]
 
@@ -31,10 +31,12 @@ class PostsController < ApplicationController
     end
 
     def edit
+      authorize @post, :edit?, policy_class: PostPolicy
       @display_address = @post.location
     end
 
     def update
+      authorize @post, :update?, policy_class: PostPolicy
       if params[:share_geo_location ].blank?
         @post.city = nil
         @post.district = nil
@@ -49,6 +51,7 @@ class PostsController < ApplicationController
     end
 
     def destroy
+      authorize @post, :destroy?, policy_class: PostPolicy
       if @post.destroy
         flash[:notice] = "Successfully deleted!"
       else
@@ -75,7 +78,6 @@ class PostsController < ApplicationController
 
     def set_post
       @post = Post.find(params[:id])
-      authorize @post, policy_class: PostPolicy
     end
 
     def default_posts_path

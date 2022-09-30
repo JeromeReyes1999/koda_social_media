@@ -15,6 +15,10 @@ class GroupPolicy < ApplicationPolicy
     record.user_groups.where(user: user).where.not(roles: :normal).present?
   end
 
+  def post_management?
+    record.user_groups.where(user: user).where.not(roles: :normal).present?
+  end
+
   def destroy?
     record.owner == user
   end

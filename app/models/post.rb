@@ -20,14 +20,18 @@ class Post < ApplicationRecord
   include AASM
   aasm column: :state do
     state :pending, initial: true
-    state :published, :removed
+    state :published, :removed, :rejected
 
     event :publish do
       transitions from: :pending, to: :published
     end
 
     event :remove do
-      transitions from: [:published, :pending], to: :removed
+      transitions from: :published, to: :removed
+    end
+
+    event :reject do
+      transitions from: :pending, to: :rejected
     end
   end
 

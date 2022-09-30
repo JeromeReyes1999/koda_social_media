@@ -13,6 +13,12 @@ class GroupsController < ApplicationController
     @member_records = policy_scope(@group).includes(:user) if params[:management] != 'Pending approval'
   end
 
+  def post_management
+    authorize @group, :post_management?, policy_class: GroupPolicy
+    # @reported_posts = xxxxxxxxx if params[:management] == 'Reported posts'
+    @pending_posts = @group.posts.includes(:user).pending if params[:management] != 'Reported posts'
+  end
+
   def change_privacy
     authorize @group, :change_privacy?, policy_class: GroupPolicy
     if @group.update(privacy: params[:privacy])

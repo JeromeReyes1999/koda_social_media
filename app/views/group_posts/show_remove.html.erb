@@ -1,0 +1,5 @@
+<%= form_for @post, url: group_post_remove_path(@group, @post), method: :put  do |f| %>
+    <%= f.label :remarks, "remarks"%>
+    <%= f.text_area :remarks %>
+    <%= f.submit "Remove", class: 'text-light btn form-control' %>
+<% end %>

@@ -1,0 +1,20 @@
+  <% ['Pending posts', 'Reported posts' ].each do |manage_posts| %>
+    <%= link_to manage_posts, group_post_management_path(management: manage_posts), class: "#{:active if params[:manage_posts] == manage_posts} btn btn-primary" %>
+  <% end %>
+<table>
+    <tbody>
+    <% @pending_posts&.each do |pending_post| %>
+        <tr>
+        <td><%= pending_post.user.email %></td>
+            <td style="width: 200px"><%= image_tag pending_post.image.url, alt: 'avatar', class:'w-100',style:"object-fit: cover" if pending_post.image?%></td>
+            <td><%= pending_post.text %></th>
+            <td><%= pending_post.city %></th>
+            <td><%= pending_post.district %></th>
+            <td><%= pending_post.province %></th>
+            <%= link_to 'Approve', group_post_publish_path(@group, pending_post), method: :put, class: 'btn btn-warning'%>
+            <%= link_to 'Reject', group_post_reject_path(@group, pending_post), method: :put, class: 'btn btn-warning'%>
+        </td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
