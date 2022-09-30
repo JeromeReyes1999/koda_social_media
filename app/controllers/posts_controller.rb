@@ -5,7 +5,8 @@ class PostsController < ApplicationController
     after_action :verify_authorized, except: [:index, :new, :create]
 
     def index
-      @posts= Post.all
+      @posts = (current_user.posts).or(Post.everyone).or(Post.where(user: current_user.friends).friends_only).order(id: :desc) if current_user
+      @posts = Post.everyone.order(id: :desc) unless current_user
     end
 
     def new
@@ -20,21 +21,20 @@ class PostsController < ApplicationController
         @post.province = @client_location['state_prov']
       end
       @post.user = current_user
+      @post.group = @group
       if @post.save
         flash[:notice] = "Successfully created!"
-        redirect_to posts_path
+        redirect_to default_posts_path
       else
         render :new
       end
     end
 
     def edit
-      authorize @post, :edit?, policy_class: PostPolicy
       @display_address = @post.location
     end
 
     def update
-      authorize @post, :update?, policy_class: PostPolicy
       if params[:share_geo_location ].blank?
         @post.city = nil
         @post.district = nil
@@ -42,20 +42,19 @@ class PostsController < ApplicationController
       end
       if @post.update(post_params)
         flash[:notice] = "Successfully updated!"
-        redirect_to posts_path
+        redirect_to default_posts_path
       else
         render :edit
       end
     end
 
     def destroy
-      authorize @post, :destroy?, policy_class: PostPolicy
       if @post.destroy
         flash[:notice] = "Successfully deleted!"
       else
         flash[:alert] = @post.errors.full_messages.join(', ')
       end
-      redirect_to posts_path
+      redirect_to default_posts_path
     end
 
     private
@@ -76,5 +75,10 @@ class PostsController < ApplicationController
 
     def set_post
       @post = Post.find(params[:id])
+      authorize @post, policy_class: PostPolicy
+    end
+
+    def default_posts_path
+      posts_path
     end
 end

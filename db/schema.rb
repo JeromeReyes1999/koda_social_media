@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_19_110150) do
+ActiveRecord::Schema.define(version: 2022_09_26_082253) do
 
   create_table "comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "content"
@@ -18,6 +18,8 @@ ActiveRecord::Schema.define(version: 2022_09_19_110150) do
     t.bigint "post_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "group_post_id"
+    t.index ["group_post_id"], name: "index_comments_on_group_post_id"
     t.index ["post_id"], name: "index_comments_on_post_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
@@ -32,6 +34,18 @@ ActiveRecord::Schema.define(version: 2022_09_19_110150) do
     t.index ["user_id"], name: "index_friend_requests_on_user_id"
   end
 
+  create_table "groups", charset: "utf8mb4", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.string "banner"
+    t.bigint "owner_id"
+    t.integer "privacy"
+    t.boolean "can_invite"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["owner_id"], name: "index_groups_on_owner_id"
+  end
+
   create_table "posts", charset: "utf8mb4", force: :cascade do |t|
     t.integer "audience"
     t.string "text"
@@ -42,7 +56,38 @@ ActiveRecord::Schema.define(version: 2022_09_19_110150) do
     t.string "province"
     t.string "district"
     t.string "city"
+    t.string "remarks"
+    t.string "state"
+    t.bigint "admin_id"
+    t.bigint "group_id"
+    t.index ["admin_id"], name: "index_posts_on_admin_id"
+    t.index ["group_id"], name: "index_posts_on_group_id"
     t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
+  create_table "reports", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "admin_id"
+    t.string "reason"
+    t.integer "state"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["admin_id"], name: "index_reports_on_admin_id"
+    t.index ["user_id"], name: "index_reports_on_user_id"
+  end
+
+  create_table "user_groups", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "group_id"
+    t.integer "roles"
+    t.string "state"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "inviter_id"
+    t.boolean "is_suspended", default: false
+    t.index ["group_id"], name: "index_user_groups_on_group_id"
+    t.index ["inviter_id"], name: "index_user_groups_on_inviter_id"
+    t.index ["user_id"], name: "index_user_groups_on_user_id"
   end
 
   create_table "users", charset: "utf8mb4", force: :cascade do |t|

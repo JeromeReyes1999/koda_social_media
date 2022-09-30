@@ -1,0 +1,17 @@
+<table>
+<% @uninvited_friends.each do |friend| %>
+  <tr>
+    <td><%= friend.email %></th>
+    <td>
+      <%= link_to 'invite', group_invite_path(@group, friend), method: :post, class: 'btn btn-warning' %>
+    </td>
+  </tr>
+<% end %>
+<% unless @uninvited_friends.present?%>
+  <tr>
+    <td colspan="4" class="text-muted">
+      No friends to show
+    </td>
+  </tr>
+<% end %>
+</table>

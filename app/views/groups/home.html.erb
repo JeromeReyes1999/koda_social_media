@@ -1,0 +1,52 @@
+<%= button_to "Logout", destroy_user_session_path, :method => :delete %>
+
+<%= image_tag @group.banner.url, class:"original w-25 my-2", style:"object-fit: cover"%>
+<%= @group.name %>
+<%= @group.description%>
+
+<%= link_to 'Invite Friends', group_invite_friends_path(@group), class: 'btn btn-primary w-25' %>
+<%= link_to 'Member Management', group_member_management_path(@group), class: 'btn btn-primary w-25' if policy(@group).member_management?%>
+<%= link_to 'Delete Group', group_path(@group), method: :delete, class: 'btn btn-primary w-25' if policy(@group).destroy?%>
+<%= link_to "Make group #{privacy_toggled_value(@group)}", group_change_privacy_path(@group, privacy_toggled_value(@group)), method: :put, class: 'btn btn-primary w-25' if policy(@group).change_privacy?%>
+<%#= link_to 'Post Management', group_invite_friends_path(@group), class: 'btn btn-primary w-25' %>
+
+<%= link_to 'New Post', new_group_post_path, class: 'btn btn-primary w-25' %>
+<div class="card mt-4">
+  <div class="card-body ">
+    <table class="table table-striped table-hover">
+      <thead>
+      <th>Image</th>
+      <td>text</th>
+      <td>city</th>
+      <td>district</th>
+      <td>province</th>
+      <th>Action</th>
+      </thead>
+      <tbody>
+
+      <% @posts.each do |post| %>
+        <tr>
+          <td style="width: 200px"><%= image_tag post.image.url, alt: 'avatar', class:'w-100',style:"object-fit: cover" if post.image?%></td>
+          <td><%= post.text %></th>
+          <td><%= post.city %></th>
+          <td><%= post.district %></th>
+          <td><%= post.province %></th>
+          <td>
+            <%= link_to 'comments', post_comments_path(post), class: 'btn btn-warning' %>
+            <%#= link_to 'report', post_comments_path(post), class: 'btn btn-warning' %>
+            <%= link_to 'edit', edit_post_path(post), class: 'btn btn-warning' if post.user == current_user %>
+            <%= link_to "delete", post_path(post), method: :delete, data: { confirm: "Are you sure?" }, class: 'btn btn-danger' if post.user == current_user %>
+          </td>
+        </tr>
+      <% end %>
+      <% unless @posts.present?%>
+        <tr>
+          <td colspan="4" class="text-muted">
+            No posts to show
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

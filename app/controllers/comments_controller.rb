@@ -23,12 +23,9 @@ class CommentsController < ApplicationController
     end
   end
 
-  def edit
-    authorize @comment, :edit?, policy_class: CommentPolicy
-  end
+  def edit; end
 
   def update
-    authorize @comment, :update?, policy_class: CommentPolicy
     if @comment.update(comment_params)
       redirect_to post_comments_path(@post, @comment)
     else
@@ -37,7 +34,6 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    authorize @comment, :destroy?, policy_class: CommentPolicy
     if @comment.destroy
       redirect_to post_comments_path(@post)
     end
@@ -45,12 +41,14 @@ class CommentsController < ApplicationController
 
   private
 
-  def set_comment
-    @comment = @post.comments.find(params[:id])
-  end
-
   def set_post
     @post = Post.find params[:post_id]
+    authorize @post, :audience?, policy_class: PostPolicy
+  end
+
+  def set_comment
+    @comment = @post.comments.find(params[:id])
+    authorize @comment,  policy_class: CommentPolicy
   end
 
   def comment_params
